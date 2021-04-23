@@ -4,6 +4,7 @@
 %token COLON VAR
 %token DEBUT FIN BPINCEAU HPINCEAU
 %token AVANCE TOURNE
+%token SI FAIRE ALORS SINON TANTQUE 
 %start <Syntax.program> s
 
 %{ open Syntax %}
@@ -22,6 +23,8 @@ instruction:
   | HPINCEAU {HautPinceau}
   | i=ID EGAL e=expression {Affect(i,e)}
   | DEBUT b=blocinstruction FIN {Bloc(b)}
+  | SI e=expression ALORS i_si=instruction SINON i_non=instruction {Cond(e,i_si,i_non)}
+  | TANTQUE e=expression FAIRE i=instruction {Repet(e,i)}
 blocinstruction:
   | {[]}
   | i=instruction COLON b=blocinstruction {i::b}

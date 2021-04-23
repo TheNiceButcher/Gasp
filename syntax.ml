@@ -13,6 +13,8 @@ type instruction =
 	| HautPinceau
 	| Affect of string * expression
 	| Bloc of instruction list
+	| Cond of expression * instruction * instruction
+	| Repet of expression * instruction
 type declaration = string
 type program = declaration list * instruction
 let rec affiche_expression e =
@@ -31,3 +33,7 @@ let rec affiche_instruction i =
 	| HautPinceau ->  print_string "HautPinceau"
 	| Affect (s,e) -> print_string (s ^ " = "); affiche_expression e;
 	| Bloc(l) -> List.iter (affiche_instruction) l
+	| Repet(e,i1) -> print_string "Tant que ";affiche_expression e; print_string "Faire";
+				affiche_instruction i1;
+	| Cond(e,i1,i2) -> print_string "si ";affiche_expression e; print_string "Alors";
+			affiche_instruction i1; print_string "Sinon"; affiche_instruction i2;

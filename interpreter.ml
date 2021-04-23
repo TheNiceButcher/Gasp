@@ -56,6 +56,22 @@ let rec exec_inst tortue i =
 		{ tortue with env =
 		(List.map (fun (id,v) -> if(s = id) then (id,n) else (id,v)) tortue.env) }
 	| Bloc(l) -> exec_bloc tortue l
+	| Cond(e,i1,i2) ->
+		let n = calcul tortue.env e in
+		if(n <> 0)
+		then
+			exec_inst tortue i1
+		else
+			exec_inst tortue i2
+	| Repet(e,i1) ->
+		let n = calcul tortue.env e in
+		if (n <> 0)
+		then
+			let t = exec_inst tortue i1 in
+			exec_inst t i;
+		else
+			tortue
+
 and exec_bloc tortue b =
 	match b with
 	| [] -> tortue

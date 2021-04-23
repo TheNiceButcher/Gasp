@@ -1,6 +1,7 @@
 {
 	open Parser
 	open Lexing
+	exception Error of string
 	let next_line lexbuf =
 	   let pos = lexbuf.lex_curr_p in
 	   lexbuf.lex_curr_p <-
@@ -24,10 +25,15 @@ rule lexeur = parse
  | "Tourne" {TOURNE}
  | "HautPinceau" {HPINCEAU}
  | "BasPinceau" {BPINCEAU}
+ | "Si" {SI}
+ | "Alors" {ALORS}
+ | "Sinon" {SINON}
+ | "Tant que" {TANTQUE}
+ | "Faire" {FAIRE}
  | '+' {PLUS}
  | '-' {MOINS}
  | '(' {PARG}
  | ')' {PARD}
  | '=' {EGAL}
  | eof {EOF}
- | _  {failwith"WTF"}
+ | _  {raise (Error (Lexing.lexeme lexbuf))}
