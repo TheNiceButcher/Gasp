@@ -1,5 +1,5 @@
 type op =
-	Plus | Moins
+	Plus | Moins | Identite
 type wtf =
 	op * expression
 and expression =
@@ -25,6 +25,7 @@ let rec affiche_expression e =
 				match w with
 	 			| (Plus, e1) -> print_string "+";affiche_expression e1
 				| (Moins,e1) -> print_string "-";affiche_expression e1
+				| (Identite,_) -> print_string ";"
 let rec affiche_instruction i =
 	match i with
 	| Avance e -> print_string "Avance "; affiche_expression e;

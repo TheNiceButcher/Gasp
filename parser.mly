@@ -4,7 +4,7 @@
 %token COLON VAR
 %token DEBUT FIN BPINCEAU HPINCEAU
 %token AVANCE TOURNE
-%token SI FAIRE ALORS SINON TANTQUE 
+%token SI FAIRE ALORS SINON TANTQUE
 %start <Syntax.program> s
 
 %{ open Syntax %}
@@ -35,4 +35,4 @@ expression:
 expressionSuite:
   | PLUS e=expression {(Plus,e)}
   | MOINS e=expression {(Moins,e)}
-  | {(Plus,Const 0)}
+  | {(Identite,Const 0)}

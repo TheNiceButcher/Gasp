@@ -20,6 +20,7 @@ let nvx_pos (x,y) a dist=
 	in (int_of_float (fst pos),int_of_float (snd pos))
 (* Initialise les variables déclarées à 0 dans l *)
 let init_var l = List.map (fun(s) -> (s,0)) l
+
 (*Calcule la valeur de expr dans l'environnement env*)
 let rec calcul env expr =
  	match expr with
@@ -32,9 +33,21 @@ let rec calcul env expr =
 				end
 	| App(e,w) ->
 	 	let val_e = calcul env e in
-		match w with
-		| (Plus,e1) -> val_e + calcul env e1
-		| (Moins,e1) -> val_e - calcul env e1
+		calcul_app env w val_e
+and
+calcul_app env w acc =
+	match w with
+	| (Identite, _) -> acc
+	| (Plus,e) -> begin
+				 match e with
+				 | Ident _|Const _ -> acc + (calcul env e)
+				 | App(e1,w1) -> calcul_app env w1 (acc + calcul env e1)
+				 end
+	| (Moins,e) ->   begin
+				 match e with
+				 | Ident _|Const _ -> acc - (calcul env e)
+				 | App(e1,w1) -> calcul_app env w1 (acc - calcul env e1)
+				 end
 (*Execute l'instruction i*)
 let rec exec_inst tortue i =
 	match i with
@@ -42,6 +55,7 @@ let rec exec_inst tortue i =
 		begin
 		let n = calcul tortue.env e in
 		let npos = nvx_pos tortue.position tortue.angle n in
+		if((fst npos) < 0 || (snd npos) < 0) then (raise (Error "Sortie du canevas"));
 		if (tortue.dessine) then lineto (fst npos) (snd npos)
 		else moveto (fst npos) (snd npos);
 		{tortue with position=npos}
@@ -53,6 +67,7 @@ let rec exec_inst tortue i =
 	| HautPinceau -> {tortue with dessine = false}
 	| Affect(s,e) ->
 		let n = calcul tortue.env e in
+		print_string (s ^ (string_of_int n));
 		{ tortue with env =
 		(List.map (fun (id,v) -> if(s = id) then (id,n) else (id,v)) tortue.env) }
 	| Bloc(l) -> exec_bloc tortue l
