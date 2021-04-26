@@ -35,5 +35,7 @@ rule lexeur = parse
  | '(' {PARG}
  | ')' {PARD}
  | '=' {EGAL}
+ | '*' {MULT}
+ | '/' {DIV}
  | eof {EOF}
  | _  {raise (Error (Lexing.lexeme lexbuf))}

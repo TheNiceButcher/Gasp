@@ -1,11 +1,12 @@
 %token <int> NB
 %token <string> ID
-%token PLUS MOINS PARG PARD EGAL EOF
+%token PLUS MOINS MULT DIV PARG PARD EGAL EOF
 %token COLON VAR
 %token DEBUT FIN BPINCEAU HPINCEAU
 %token AVANCE TOURNE
 %token SI FAIRE ALORS SINON TANTQUE
 %start <Syntax.program> s
+
 
 %{ open Syntax %}
 %%
@@ -35,4 +36,6 @@ expression:
 expressionSuite:
   | PLUS e=expression {(Plus,e)}
   | MOINS e=expression {(Moins,e)}
+  | MULT e=expression {(Mult,e)}
+  | DIV e=expression {(Div,e)}
   | {(Identite,Const 0)}
