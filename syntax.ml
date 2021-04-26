@@ -6,6 +6,7 @@ and expression =
 	Const of int
 	| Ident of string
 	| App of expression * wtf
+	| Neg of expression
 type instruction =
 	Avance of expression
 	| Tourne of expression
@@ -21,6 +22,7 @@ let rec affiche_expression e =
 	match e with
 	| Const n -> print_int n
 	| Ident s -> print_string s
+	| Neg e -> print_string "-("; affiche_expression e; print_string ")"  
 	| App (e,w)-> affiche_expression e;
 				match w with
 	 			| (Plus, e1) -> print_string "+";affiche_expression e1
@@ -28,6 +30,7 @@ let rec affiche_expression e =
 				| (Identite,_) -> print_string ";"
 				| (Mult,e1) -> print_string "*";affiche_expression e1
 				| (Div,e1) -> print_string "/";affiche_expression e1
+
 let rec affiche_instruction i =
 	match i with
 	| Avance e -> print_string "Avance "; affiche_expression e;

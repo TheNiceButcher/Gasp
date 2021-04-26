@@ -38,7 +38,7 @@ let affiche_app a =
 	| _ -> print_string "Undefined"
 (* Initialise les variables déclarées à 0 dans l *)
 let init_var l = List.map (fun(s) -> (s,0)) l
-(**)
+(* *)
 let calcul_op l =
 	List.iter affiche_app l;
   	let g = List.hd l in
@@ -63,6 +63,7 @@ let rec calcul env expr =
 					| Some n -> n
 					| None -> raise (Error ("identificateur " ^ s ^ " non declare"))
 				end
+	| Neg e -> 0 - (calcul env e)
 	| App(_,_) ->
 	 	(*let val_e = calcul env e in*)
 		(*calcul_app env w val_e *)
