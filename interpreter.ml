@@ -6,6 +6,7 @@ type tortue = {
 	dessine: bool;
 	env: (string * int) list;
 }
+(* Type pour les couleurs *)
 open Syntax
 open Graphics
 (* Type pour construire la liste pour évaluer les expressions*)
@@ -160,6 +161,15 @@ let rec exec_inst tortue i =
 		{ tortue with angle = ((tortue.angle + n) mod 360) }
 	| BasPinceau -> {tortue with dessine = true}
 	| HautPinceau -> {tortue with dessine = false}
+	| ChangeCouleur c -> let col = match c with
+						| "noir" -> black
+						| "vert" -> green
+						| "rouge" -> red
+						| "jaune" -> yellow
+						| "bleu" -> blue
+						| _ -> raise (Error ("Couleur " ^ c ^ "inconnu"))
+						in set_color col; tortue
+	| ChangeEpaisseur e -> set_line_width (calcul tortue.env e); tortue
 	| Affect(s,e) ->
 		let n = calcul tortue.env e in
 		print_string (s ^ (string_of_int n));

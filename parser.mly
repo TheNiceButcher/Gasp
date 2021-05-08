@@ -2,7 +2,7 @@
 %token <string> ID
 %token PLUS MOINS MULT DIV PARG PARD EGAL EOF
 %token COLON VAR
-%token DEBUT FIN BPINCEAU HPINCEAU
+%token DEBUT FIN BPINCEAU HPINCEAU COULEUR EPAISSEUR
 %token AVANCE TOURNE
 %token SI FAIRE ALORS SINON TANTQUE
 %start <Syntax.program> s
@@ -22,9 +22,11 @@ instruction:
   | TOURNE e=expression {Tourne(e)}
   | BPINCEAU {BasPinceau}
   | HPINCEAU {HautPinceau}
+  | COULEUR c=ID {ChangeCouleur c}
+  | EPAISSEUR e = expression {ChangeEpaisseur e}
   | i=ID EGAL e=expression {Affect(i,e)}
   | DEBUT b=blocinstruction FIN {Bloc(b)}
-  | SI e=expression ALORS i_si=instruction s=sinon {Cond(e,i_si,s)}
+  | SI e=expression ALORS i_si=instruction /*s=sinon*/ SINON i_non=instruction {Cond(e,i_si,Some i_non)}
   | TANTQUE e=expression FAIRE i=instruction {Repet(e,i)}
 blocinstruction:
   | {[]}
@@ -42,6 +44,6 @@ expressionSuite:
   | MULT e=expression {(Mult,e)}
   | DIV e=expression {(Div,e)}
   | {(Identite,Const 0)}
-sinon:
+/*sinon:
   | {None}
-  | SINON i=instruction {Some(i)}
+  | SINON i=instruction {Some(i)}*/

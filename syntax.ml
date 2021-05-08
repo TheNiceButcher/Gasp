@@ -12,6 +12,8 @@ type instruction =
 	| Tourne of expression
 	| BasPinceau
 	| HautPinceau
+	| ChangeEpaisseur of expression
+	| ChangeCouleur of string
 	| Affect of string * expression
 	| Bloc of instruction list
 	| Cond of expression * instruction * instruction option
@@ -37,6 +39,8 @@ let rec affiche_instruction i =
 	| Tourne e -> print_string "Tourne "; affiche_expression e;
 	| BasPinceau -> print_string "BasPinceau"
 	| HautPinceau ->  print_string "HautPinceau"
+	| ChangeEpaisseur e -> print_string "ChangeEpaisseur "; affiche_expression e;
+	| ChangeCouleur c -> print_string ("ChangeCouleur " ^ c); 
 	| Affect (s,e) -> print_string (s ^ " = "); affiche_expression e;
 	| Bloc(l) -> List.iter (affiche_instruction) l
 	| Repet(e,i1) -> print_string "Tant que ";affiche_expression e; print_string "Faire";

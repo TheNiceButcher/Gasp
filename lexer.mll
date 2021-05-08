@@ -25,6 +25,8 @@ rule lexeur = parse
  | "Tourne" {TOURNE}
  | "HautPinceau" {HPINCEAU}
  | "BasPinceau" {BPINCEAU}
+ | "ChangeCouleur" {COULEUR}
+ | "ChangeEpaisseur" {EPAISSEUR}
  | "Si" {SI}
  | "Alors" {ALORS}
  | "Sinon" {SINON}
