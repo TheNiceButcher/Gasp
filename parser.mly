@@ -24,7 +24,7 @@ instruction:
   | HPINCEAU {HautPinceau}
   | i=ID EGAL e=expression {Affect(i,e)}
   | DEBUT b=blocinstruction FIN {Bloc(b)}
-  | SI e=expression ALORS i_si=instruction SINON i_non=instruction {Cond(e,i_si,i_non)}
+  | SI e=expression ALORS i_si=instruction s=sinon {Cond(e,i_si,s)}
   | TANTQUE e=expression FAIRE i=instruction {Repet(e,i)}
 blocinstruction:
   | {[]}
@@ -42,3 +42,6 @@ expressionSuite:
   | MULT e=expression {(Mult,e)}
   | DIV e=expression {(Div,e)}
   | {(Identite,Const 0)}
+sinon:
+  | {None}
+  | SINON i=instruction {Some(i)}

@@ -14,7 +14,7 @@ type instruction =
 	| HautPinceau
 	| Affect of string * expression
 	| Bloc of instruction list
-	| Cond of expression * instruction * instruction
+	| Cond of expression * instruction * instruction option
 	| Repet of expression * instruction
 type declaration = string
 type program = declaration list * instruction
@@ -22,7 +22,7 @@ let rec affiche_expression e =
 	match e with
 	| Const n -> print_int n
 	| Ident s -> print_string s
-	| Neg e -> print_string "-("; affiche_expression e; print_string ")"  
+	| Neg e -> print_string "-("; affiche_expression e; print_string ")"
 	| App (e,w)-> affiche_expression e;
 				match w with
 	 			| (Plus, e1) -> print_string "+";affiche_expression e1
@@ -42,4 +42,7 @@ let rec affiche_instruction i =
 	| Repet(e,i1) -> print_string "Tant que ";affiche_expression e; print_string "Faire";
 				affiche_instruction i1;
 	| Cond(e,i1,i2) -> print_string "si ";affiche_expression e; print_string "Alors";
-			affiche_instruction i1; print_string "Sinon"; affiche_instruction i2;
+			affiche_instruction i1;
+					match i2 with
+					| Some i -> print_string "Sinon"; affiche_instruction i;
+					| None -> print_string "";

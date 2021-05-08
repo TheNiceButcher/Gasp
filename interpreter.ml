@@ -172,7 +172,10 @@ let rec exec_inst tortue i =
 		then
 			exec_inst tortue i1
 		else
-			exec_inst tortue i2
+			begin
+			match i2 with
+			| Some si -> exec_inst tortue si
+			| None -> tortue end
 	| Repet(e,i1) ->
 		let n = calcul tortue.env e in
 		if (n <> 0)
