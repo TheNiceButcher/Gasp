@@ -1,6 +1,9 @@
 -Compilation
-	Pour compiler le projet, il suffit de taper la commande 'make'.
+	Pour compiler le projet, il suffit de taper la commande 'make'. Pour supprimer
+les fichiers crées lors de la compilation, la commande 'make clean' est nécessaire.
 -Exécution du programme
 	L'exécution du programme passe par la commande './run.exe fich' où fich est le
 chemin du fichier sur lequel on souhaite exécuter le programme.
-- 
+-Réalisation du projet
+	Notre projet comporte toutes les fonctionnalités des étapes 1 à 3 et la modification
+de l'épaisseur et de la couleur du traits.
