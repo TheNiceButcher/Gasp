@@ -1,0 +1,6 @@
+-Compilation
+	Pour compiler le projet, il suffit de taper la commande 'make'.
+-Exécution du programme
+	L'exécution du programme passe par la commande './run.exe fich' où fich est le
+chemin du fichier sur lequel on souhaite exécuter le programme.
+- 
