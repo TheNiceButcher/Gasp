@@ -20,6 +20,7 @@ type instruction =
 	| Repet of expression * instruction
 type declaration = string
 type program = declaration list * instruction
+type interpreter = Inst of instruction | Decl of declaration
 let rec affiche_expression e =
 	match e with
 	| Const n -> print_int n
@@ -49,4 +50,9 @@ let rec affiche_instruction i =
 			affiche_instruction i1;
 					match i2 with
 					| Some i -> print_string "Sinon"; affiche_instruction i;
-					| None -> print_string "";
+					| None -> print_string "";;
+
+let affiche_inter m =
+	match m with
+	| Inst i  -> affiche_instruction i
+	| Decl d -> print_string d

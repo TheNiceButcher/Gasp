@@ -6,6 +6,8 @@ type tortue = {
 	dessine: bool;
 	env: (string * int) list;
 }
+let init_tortue envi =
+	{position = (0,0);angle = 90;dessine=false;env = envi}
 (* Type pour les couleurs *)
 open Syntax
 open Graphics
@@ -67,8 +69,6 @@ let rec calcul env expr =
 	| Neg e -> let t = 0 - (calcul env e) in print_string "Neg ";print_int t;t
 	(*| Paren e -> calcul env e *)
 	| App(_,_) ->
-	 	(*let val_e = calcul env e in*)
-		(*calcul_app env w val_e *)
 		calcul_app env expr []
 	(*| App l -> calcul_app l env 0*)
 (*Calcule la valeur de expr qui est de la forme App().
@@ -185,3 +185,7 @@ let exec p =
 	let _ = exec_inst tortue (snd p) in
 	let _ = Graphics.wait_next_event[Button_down] in
 	close_graph()
+let exec_interp e tortue =
+	match e with
+	| Decl d -> {tortue with env = (d,0)::tortue.env}
+	| Inst i -> exec_inst tortue i

@@ -6,10 +6,13 @@
 %token AVANCE TOURNE
 %token SI FAIRE ALORS SINON TANTQUE
 %start <Syntax.program> s
+%start <Syntax.interpreter> interp
 %{ open Syntax %}
 %%
 
 s: p=program EOF                                     {p}
+interp : d = declaration EOF {Decl d}
+	| i = instruction EOF {Inst i}
 
 program: ds=declaration* is=instruction    {(ds,is)}
 
