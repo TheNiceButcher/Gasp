@@ -24,4 +24,4 @@ la traitera et ainsi de suite. Pour arrêter de passer des commandes, il suffit 
 -Réalisation du projet
 
 	Notre projet comporte toutes les fonctionnalités des étapes 1 à 3, la modification
-de l'épaisseur et de la couleur du traits et le mode interprété.
+de l'épaisseur (avec la commande ChangeEpaisseur) et de la couleur du traits (avec la commande ChangeCouleur) et le mode interprété.
