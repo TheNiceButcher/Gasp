@@ -143,10 +143,15 @@ let rec exec_inst tortue i =
 						in set_color col; tortue
 	| ChangeEpaisseur e -> set_line_width (calcul tortue.env e); tortue
 	| Affect(s,e) ->
+		let ident = List.assoc_opt s tortue.env in
+		begin match ident with
+		| None -> raise (Error ("identificateur " ^ s ^ " non declare"))
+		| Some _ ->
 		let n = calcul tortue.env e in
 		print_string (s ^ "->" ^(string_of_int n));
 		{ tortue with env =
 		(List.map (fun (id,v) -> if(s = id) then (id,n) else (id,v)) tortue.env) }
+		end
 	| Bloc(l) -> exec_bloc tortue l
 	| Cond(e,i1,i2) ->
 		let n = calcul tortue.env e in
