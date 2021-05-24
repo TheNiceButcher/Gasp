@@ -18,7 +18,7 @@ let _ =
 		 try
 		    let ast =
 		      Parser.s Lexer.lexeur lb
-		    in Syntax.affiche_instruction (snd ast);Interpreter.exec ast;
+		    in Interpreter.exec ast;
 		with
 		| Lexer.Error msg ->
 	     Printf.fprintf stderr "%a: Erreur lexeur reading %s\n" print_position lb msg;
@@ -29,7 +29,7 @@ let _ =
 	  | Interpreter.Error s ->
 	     Printf.fprintf stderr "%a Erreur  %s\n" print_position lb s;
 	     exit (-1)
-  else
+  else if(nb_arg = 1) then
   begin
   	Graphics.open_graph " 800x800";
   	print_string "Tapez Arret quand on avez fini\n";
@@ -38,21 +38,25 @@ let _ =
 		| 0 -> print_string "Au revoir\n"
 		| _ ->
 		let r = read_line() in
+		(*Arret tape -> fin *)
 			if(r = "Arret") then loop 0 tortue
 			else let p = Lexing.from_string r in
 			try
 				let q = Parser.interp Lexer.lexeur p in loop 1 (Interpreter.exec_interp q tortue)
 			with
 			| Lexer.Error msg ->
-			 Printf.fprintf stderr "%a: Erreur lexeur reading %s\n" print_position p msg;
+			 Printf.fprintf stderr "%a: Erreur lexical %s\n" print_position p msg;
 			 exit (-1)
 		  | Parser.Error ->
 			 Printf.fprintf stderr "%a: Erreur de syntaxe \n" print_position p;
 			 exit (-1)
 		  | Interpreter.Error s ->
-			 Printf.fprintf stderr "%a Erreur de valeur %s\n" print_position p s;
+			 Printf.fprintf stderr "%a Erreur  %s\n" print_position p s;
 			 exit (-1)
 		in loop 1 (Interpreter.init_tortue []);
+		(*Clic sur le fenetre pour fermer le programme *)
 		let _ = Graphics.wait_next_event[Button_down] in
 		Graphics.close_graph();
 		end
+	else
+		Printf.fprintf stderr "Le programme doit etre lance avec 0 ou 1 arguments";

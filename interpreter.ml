@@ -6,6 +6,7 @@ type tortue = {
 	dessine: bool;
 	env: (string * int) list;
 }
+(* Renvoie une instance de tortue avec les identificateurs de envi*)
 let init_tortue envi =
 	{position = (0,0);angle = 90;dessine=false;env = envi}
 (* Type pour les couleurs *)
@@ -30,20 +31,10 @@ let nvx_pos (x,y) a dist=
 	 let pos = 	(float_of_int x +. (float_of_int dist) *. (cos angle),
 		 		float_of_int y +. (float_of_int dist) *. (sin angle))
 	in (int_of_float (fst pos),int_of_float (snd pos))
-(* Affiche les instances de App *)
-let affiche_app a =
-	match a with
-	| Op(Plus) -> print_string "+"
-	| Op(Moins) -> print_string "-"
-	| Op(Div) -> print_string "/"
-	| Op(Mult) -> print_string "*"
-	| Expr c -> print_int c
-	| _ -> print_string "Undefined"
 (* Initialise les variables déclarées à 0 dans l *)
 let init_var l = List.map (fun(s) -> (s,0)) l
-(* *)
+(* Calcule *)
 let calcul_op l =
-	List.iter affiche_app l;
   	let g = List.hd l in
 	let rec aux l1 acc =
 	 	match l1 with
@@ -66,11 +57,9 @@ let rec calcul env expr =
 					| Some n -> n
 					| None -> raise (Error ("identificateur " ^ s ^ " non declare"))
 				end
-	| Neg e -> let t = 0 - (calcul env e) in print_string "Neg ";print_int t;t
-	(*| Paren e -> calcul env e *)
+	| Neg e -> let t = 0 - (calcul env e) in t
 	| App(_,_) ->
 		calcul_app env expr []
-	(*| App l -> calcul_app l env 0*)
 (*Calcule la valeur de expr qui est de la forme App().
 Pour trouver sa valeur, on contruit une liste constitue uniquement des opérations
 Moins et plus qu'on passe à calcul_op*)
@@ -82,7 +71,7 @@ and calcul_app env expr l =
 					if ((List.length l) = 0)
 				  then
 				  	if (op <> Identite )
-					then begin print_string "First ";print_int n;calcul_app env es [Op op;Expr n] end
+					then begin calcul_app env es [Op op;Expr n] end
 					(*Si l'operation est Identite, alors on renvoie directement
 					la valeur de l'expression*)
 					else n
@@ -115,7 +104,7 @@ and calcul_app env expr l =
 									grace à calcul_op*)
 										else calcul_op (List.rev ((Expr n)::l))
 					| _ -> failwith "Impossible App_f" end
-	| e -> affiche_expression e;failwith "Impossible App "
+	| _ -> failwith "Impossible App "
 (*Execute l'instruction i*)
 let rec exec_inst tortue i =
 	match i with
@@ -148,7 +137,6 @@ let rec exec_inst tortue i =
 		| None -> raise (Error ("identificateur " ^ s ^ " non declare"))
 		| Some _ ->
 		let n = calcul tortue.env e in
-		print_string (s ^ "->" ^(string_of_int n));
 		{ tortue with env =
 		(List.map (fun (id,v) -> if(s = id) then (id,n) else (id,v)) tortue.env) }
 		end
@@ -185,6 +173,7 @@ let exec p =
 	let _ = exec_inst tortue (snd p) in
 	let _ = Graphics.wait_next_event[Button_down] in
 	close_graph()
+(* Exécute les commandes tapées dans le mode interprété du programme *)
 let exec_interp e tortue =
 	match e with
 	| Decl d -> {tortue with env = (d,0)::tortue.env}
