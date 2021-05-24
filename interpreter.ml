@@ -64,7 +64,8 @@ let rec calcul env expr =
 					| Some n -> n
 					| None -> raise (Error ("identificateur " ^ s ^ " non declare"))
 				end
-	| Neg e -> 0 - (calcul env e)
+	| Neg e -> let t = 0 - (calcul env e) in print_string "Neg ";print_int t;t
+	(*| Paren e -> calcul env e *)
 	| App(_,_) ->
 	 	(*let val_e = calcul env e in*)
 		(*calcul_app env w val_e *)
@@ -81,7 +82,7 @@ and calcul_app env expr l =
 					if ((List.length l) = 0)
 				  then
 				  	if (op <> Identite )
-					then calcul_app env es [Op op;Expr n]
+					then begin print_string "First ";print_int n;calcul_app env es [Op op;Expr n] end
 					(*Si l'operation est Identite, alors on renvoie directement
 					la valeur de l'expression*)
 					else n
@@ -98,7 +99,7 @@ and calcul_app env expr l =
 					présent en 2ème position dans la liste.*)
 					| Op Div -> begin let n1 = List.hd (List.tl l) in
 								match n1 with
-								| Expr c -> if(op <> Identite) then calcul_app env es ((Op op)::(Expr (n / c))::(List.tl (List.tl l)))
+								| Expr c -> if(op <> Identite) then calcul_app env es ((Op op)::(Expr (c / n))::(List.tl (List.tl l)))
 											else calcul_op (List.rev ((Expr (c / n))::(List.tl (List.tl l))))
 								| _ -> failwith("Soucis") end
 					| Op Mult -> begin let n1 = List.hd (List.tl l) in
@@ -115,35 +116,6 @@ and calcul_app env expr l =
 										else calcul_op (List.rev ((Expr n)::l))
 					| _ -> failwith "Impossible App_f" end
 	| e -> affiche_expression e;failwith "Impossible App "
-(*and calcul_app env w acc =
-	match w with
-	| (Identite, _) -> acc
-	| (Plus,e) -> begin
-				 match e with
-				 | Ident _|Const _ -> acc + (calcul env e)
-				 | App(e1,w1) -> calcul_app env w1 (acc + calcul env e1)
-				 end
-	| (Moins,e) ->   begin
-				 match e with
-				 | Ident _|Const _ -> acc - (calcul env e)
-				 | App(e1,w1) -> calcul_app env w1 (acc - calcul env e1)
-				 end
-	| (Mult,e) -> begin
-				 match e with
-				 | Ident _|Const _ -> acc * (calcul env e)
-				 | App(e1,w1) -> calcul_app env w1 (acc * calcul env e1)
-				 end
-	| (Div,e) -> begin
-				 match e with
-				 | Ident _|Const _ -> acc / (calcul env e)
-				 | App(e1,w1) -> calcul_app env w1 (acc / calcul env e1)
-				 end*)
-(*and calcul_app l env acc =
-	match List.find_opt (fun f -> f = Op(Mult)) l with
-	| Some v ->
-	| None -> begin match List.find_opt (fun f -> match f with Op(Mult) -> true | _ -> false) l with
-					| Some v -> expr
-					| None -> List.foldl*)
 (*Execute l'instruction i*)
 let rec exec_inst tortue i =
 	match i with
@@ -172,7 +144,7 @@ let rec exec_inst tortue i =
 	| ChangeEpaisseur e -> set_line_width (calcul tortue.env e); tortue
 	| Affect(s,e) ->
 		let n = calcul tortue.env e in
-		print_string (s ^ (string_of_int n));
+		print_string (s ^ "->" ^(string_of_int n));
 		{ tortue with env =
 		(List.map (fun (id,v) -> if(s = id) then (id,n) else (id,v)) tortue.env) }
 	| Bloc(l) -> exec_bloc tortue l
@@ -206,4 +178,5 @@ let exec p =
 	let envi = init_var (fst p) in
 	let tortue = {position = (0,0);angle = 90;dessine=false;env = envi} in
 	let _ = exec_inst tortue (snd p) in
-	Unix.sleep 10;
+	let _ = Graphics.wait_next_event[Button_down] in
+	close_graph()

@@ -6,8 +6,6 @@
 %token AVANCE TOURNE
 %token SI FAIRE ALORS SINON TANTQUE
 %start <Syntax.program> s
-
-
 %{ open Syntax %}
 %%
 
@@ -26,7 +24,7 @@ instruction:
   | EPAISSEUR e = expression {ChangeEpaisseur e}
   | i=ID EGAL e=expression {Affect(i,e)}
   | DEBUT b=blocinstruction FIN {Bloc(b)}
-  | SI e=expression ALORS i_si=instruction /*s=sinon*/ SINON i_non=instruction {Cond(e,i_si,Some i_non)}
+  | SI e=expression ALORS i_si=instruction  SINON s = instruction {Cond(e,i_si,Some s)}
   | TANTQUE e=expression FAIRE i=instruction {Repet(e,i)}
 blocinstruction:
   | {[]}
@@ -37,7 +35,7 @@ expression:
   | n=NB  e=expressionSuite {App(Const n,e)}
   | MOINS n=NB  e=expressionSuite {App(Neg(Const n),e)}
   | PARG e=expression PARD es=expressionSuite {App(e,es)}
-  | MOINS PARG e=expression PARD es=expressionSuite {App(Neg(e),es)}
+  | MOINS PARG e=expression PARD es=expressionSuite {App(e,es)}
 expressionSuite:
   | PLUS e=expression {(Plus,e)}
   | MOINS e=expression {(Moins,e)}
@@ -46,4 +44,5 @@ expressionSuite:
   | {(Identite,Const 0)}
 /*sinon:
   | {None}
-  | SINON i=instruction {Some(i)}*/
+  | SINON i=instruction {Some(i)}
+*/

@@ -40,7 +40,7 @@ let rec affiche_instruction i =
 	| BasPinceau -> print_string "BasPinceau"
 	| HautPinceau ->  print_string "HautPinceau"
 	| ChangeEpaisseur e -> print_string "ChangeEpaisseur "; affiche_expression e;
-	| ChangeCouleur c -> print_string ("ChangeCouleur " ^ c); 
+	| ChangeCouleur c -> print_string ("ChangeCouleur " ^ c);
 	| Affect (s,e) -> print_string (s ^ " = "); affiche_expression e;
 	| Bloc(l) -> List.iter (affiche_instruction) l
 	| Repet(e,i1) -> print_string "Tant que ";affiche_expression e; print_string "Faire";

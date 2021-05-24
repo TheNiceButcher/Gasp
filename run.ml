@@ -8,20 +8,28 @@ let print_position outx lexbuf =
 
 
 let _ =
-  let c = open_in Sys.argv.(1) in
-  let lb = Lexing.from_channel c
-	 in
-	 try
-	    let ast =
-	      Parser.s Lexer.lexeur lb
-	    in Syntax.affiche_instruction (snd ast);Interpreter.exec ast
-	with
-	| Lexer.Error msg ->
-     Printf.fprintf stderr "%a: Lexer error reading %s\n" print_position lb msg;
-     exit (-1)
-  | Parser.Error ->
-     Printf.fprintf stderr "%a: Syntax error\n" print_position lb;
-     exit (-1)
-  | Interpreter.Error s ->
-     Printf.fprintf stderr "Type error: %s\n" s;
-     exit (-1)
+(* On verifie si on lance le programme avec ou sans un nom de fichier *)
+  let nb_arg = Array.length Sys.argv in
+  if (nb_arg = 2) then
+	  let c = open_in Sys.argv.(1) in
+	  let lb = Lexing.from_channel c
+		 in
+		 try
+		    let ast =
+		      Parser.s Lexer.lexeur lb
+		    in Syntax.affiche_instruction (snd ast);Interpreter.exec ast
+		with
+		| Lexer.Error msg ->
+	     Printf.fprintf stderr "%a: Erreur lexeur reading %s\n" print_position lb msg;
+	     exit (-1)
+	  | Parser.Error ->
+	     Printf.fprintf stderr "%a: Erreur de syntaxe \n" print_position lb;
+	     exit (-1)
+	  | Interpreter.Error s ->
+	     Printf.fprintf stderr "Erreur de valeur %s\n" s;
+	     exit (-1)
+  else
+  	print_string "Tapez Arret quand on avez fini\n";
+	let r = read_line() in
+		if(r = "Arret") then print_string "Arret enregistre\n"
+		else print_string "Autre chose\n"
