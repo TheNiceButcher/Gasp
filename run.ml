@@ -17,7 +17,7 @@ let _ =
 		 try
 		    let ast =
 		      Parser.s Lexer.lexeur lb
-		    in Syntax.affiche_instruction (snd ast);Interpreter.exec ast
+		    in Syntax.affiche_instruction (snd ast);Interpreter.exec ast;
 		with
 		| Lexer.Error msg ->
 	     Printf.fprintf stderr "%a: Erreur lexeur reading %s\n" print_position lb msg;
@@ -26,10 +26,11 @@ let _ =
 	     Printf.fprintf stderr "%a: Erreur de syntaxe \n" print_position lb;
 	     exit (-1)
 	  | Interpreter.Error s ->
-	     Printf.fprintf stderr "Erreur de valeur %s\n" s;
+	     Printf.fprintf stderr "%a Erreur de valeur %s\n" print_position lb s;
 	     exit (-1)
   else
+  begin
   	print_string "Tapez Arret quand on avez fini\n";
 	let r = read_line() in
 		if(r = "Arret") then print_string "Arret enregistre\n"
-		else print_string "Autre chose\n"
+		else print_string "Autre chose\n" end
