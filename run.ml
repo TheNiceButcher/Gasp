@@ -1,3 +1,4 @@
+open Graphics
 (* Fonction reprise du cours*)
 let print_position outx lexbuf =
   Lexing.(

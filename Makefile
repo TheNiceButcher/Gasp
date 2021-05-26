@@ -1,11 +1,7 @@
-EXE=run.exe
-BUILD=_build/default/$(EXE)
-
-build:
-	rm -f $(EXE)
-	dune build
-	ln -s $(BUILD)
-
+run.exe: run.native
+	mv run.native run.exe
+run.native: parser.mly interpreter.ml lexer.mll run.ml syntax.ml
+	ocamlbuild run.native -libs graphics -use-menhir
 clean:
-	dune clean
-	rm -f $(EXE)
+	rm -r _build
+	rm run.exe
